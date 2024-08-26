@@ -1,7 +1,6 @@
 {-
 ---
 fulltitle: "Optional exercise: foldr vs. foldl"
-date: September 13, 2023
 ---
 
 This module contains some quick examples demonstrating the difference between
@@ -43,7 +42,7 @@ sum4 = sumAux 0
 {-
 All of these functions give us the same result because (+) is associative and
 commutative. However, none of these functions give us exactly the same
-*computation*: they each process the list in a different order.
+\*computation*: they each process the list in a different order.
 
          sum1 [1,2,3]
            == 1 + (2 + (3 + 0))
@@ -103,7 +102,7 @@ sum4' = foldlFlip (+) 0
 {-
 Now see what happens when you use these general operations
 with the `(:)` operator. Unlike `(+)`, `(:)` is not
-*commutative* so not all of the results will be the same.
+\*commutative* so not all of the results will be the same.
 -}
 
 -- >>> foldr (:) [] [1,2,3]

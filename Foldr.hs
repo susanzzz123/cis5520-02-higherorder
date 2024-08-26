@@ -1,11 +1,10 @@
 {-
 ---
 fulltitle: "In class exercise: foldr"
-date: September 13, 2023
 ---
 
 In [HigherOrder](HigherOrder.html) we saw a few functions that you could write using the
-general purpose `foldr function. This function captures the general pattern of
+general purpose `foldr` function. This function captures the general pattern of
 list recursion and is also good practice for working with higher-order functions.
 
 This set of exercises is intended to give you more practice with using `foldr`
@@ -18,7 +17,6 @@ of `foldr` shown in the module [Sum](Sum.html).
 
 module Foldr where
 
-import Test.HUnit (Test (TestList), runTestTT, (~:), (~=?), (~?=))
 import Prelude hiding (all, filter, foldl, foldl1, last, length, map, reverse)
 
 {-
@@ -39,24 +37,18 @@ length1 (_ : xs) = 1 + length1 xs
 Now we can rewrite it in terms of foldr.
 -}
 
--- >>> length "abc"
--- 3
--- >>> length ""
--- 0
 length :: [a] -> Int
 length = foldr (\_ n -> 1 + n) 0
 
 {-
 and test it on some inputs
+
 -}
 
-testLength :: Test
-testLength =
-  "length"
-    ~: TestList
-      [ length "abcd" ~?= 4,
-        length "" ~?= 0
-      ]
+-- >>> length "abc"
+-- 3
+-- >>> length ""
+-- 0
 
 {-
 Once we have completed the foldr version, we can trace through its evaluation using the
@@ -115,14 +107,6 @@ Now implement using foldr
 all :: (a -> Bool) -> [a] -> Bool
 all p = undefined
 
-testAll :: Test
-testAll =
-  "all"
-    ~: TestList
-      [ all (> 10) ([1 .. 20] :: [Int]) ~?= False,
-        all (> 0) ([1 .. 20] :: [Int]) ~?= True
-      ]
-
 {-
 And trace through an evaluation `all not [True,False]`:
 
@@ -154,18 +138,6 @@ last :: [a] -> Maybe a
 last = undefined
 
 {-
->
--}
-
-testLast :: Test
-testLast =
-  "last"
-    ~: TestList
-      [ last "abcd" ~?= Just 'd',
-        last "" ~?= Nothing
-      ]
-
-{-
 and trace through the evaluation `last [1,2]`
 
 Filter
@@ -179,17 +151,15 @@ of the first list for which the input function returns `True`.
 filter :: (a -> Bool) -> [a] -> [a]
 filter p = undefined
 
-testFilter :: Test
-testFilter =
-  "filter"
-    ~: TestList
-      [ filter (> 10) [1 .. 20] ~?= ([11 .. 20] :: [Int]),
-        filter (\l -> sum l <= 42) [[10, 20], [50, 50], [1 .. 5]] ~?= ([[10, 20], [1 .. 5]] :: [[Int]])
-      ]
+-- >>> filter (> 10) [1 .. 20]
+
+-- >>> filter (\l -> sum l <= 42) [10,20], [50,50], [1..5] ]
 
 {-
-Try this on `filter (>2) [2,3]`
+Trace the evaluation of `filter (>2) [2,3]`
+-}
 
+{-
 Reverse
 -------
 
@@ -211,17 +181,17 @@ Now rewrite this function using 'foldr'
 reverse :: [a] -> [a]
 reverse l = undefined
 
-testReverse :: Test
-testReverse =
-  "reverse"
-    ~: TestList
-      [ reverse "abcd" ~?= "dcba",
-        reverse "" ~?= ""
-      ]
+-- >>> reverse "abcd"
+-- "dcba"
+
+-- >>> reverse ""
+-- ""
 
 {-
 And trace through its evaluation on the list `['a','b','c']`:
+-}
 
+{-
 Intersperse
 -----------
 
@@ -250,17 +220,17 @@ Now rewrite using 'foldr'
 intersperse :: a -> [a] -> [a]
 intersperse = undefined
 
-testIntersperse :: Test
-testIntersperse =
-  "intersperse"
-    ~: TestList
-      [ "intersperse0" ~: intersperse ',' "abcde" ~=? "a,b,c,d,e",
-        "intersperse1" ~: intersperse ',' "" ~=? ""
-      ]
+-- >>> intersperse ',' "abcde"
+-- "a,b,c,d,e"
+
+-- >>> intersperse ',' ""
+-- ""
 
 {-
 and trace through an example of `intersperse ',' "ab"`
+-}
 
+{-
 foldl
 -----
 
@@ -273,44 +243,28 @@ foldl1 f z (x : xs) = foldl1 f (z `f` x) xs
 
 {-
 You can see that `foldl1` is different than `foldr` by comparing the results on various examples:
+-}
 
-      Foldr*> foldl1 (flip (:)) [] [1,2,3]
-      [3,2,1]
-      Foldr*> foldr  (:) [] [1,2,3]
-      [1,2,3]
+-- >>> foldl1 (flip (:)) [] [1,2,3]
+-- [3,2,1]
+-- >>> foldr  (:) [] [1,2,3]
+-- [1,2,3]
 
-      Foldr*> foldl1 (++) "x" ["1","2","3"]
-      "x123"
-      Foldr*> foldr (++) "x" ["1","2","3"]
-      "123x"
+-- >>> foldl1 (++) "x" ["1","2","3"]
+-- "x123"
+-- >>> foldr (++) "x" ["1","2","3"]
+-- "123x"
 
+{-
 But, you can also define `foldl` in terms of `foldr`. Give it a try.
 -}
 
 foldl :: (b -> a -> b) -> b -> [a] -> b
 foldl f z xs = undefined
 
-testFoldl :: Test
-testFoldl = foldl (++) "x" ["1", "2", "3"] ~=? "x123"
+-- >>> foldl (++) "x" ["1", "2", "3"]
+-- "x123"
 
 {-
 And trace through the test case above.
-
-Test runner
------------
 -}
-
-runTests :: IO ()
-runTests = do
-  _ <-
-    runTestTT $
-      TestList
-        [ testLength,
-          testAll,
-          testLast,
-          testFilter,
-          testReverse,
-          testIntersperse,
-          testFoldl
-        ]
-  return ()

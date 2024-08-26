@@ -1,7 +1,6 @@
 {-
 ---
 fulltitle: "Optional exercise: SecretCode"
-date: September 11, 2023
 ---
 
 This module is for those who are completely new to functional programming.
@@ -38,7 +37,6 @@ We'll call it the Brown Fox code.  Here's how it works:
 import Data.Char
 import Data.Maybe
 import System.FilePath -- library for manipulating FilePaths.
-import Test.HUnit
 
 {-
 First, we make a lookup list (aka association list) containing each pair of
@@ -92,13 +90,6 @@ character in our code, (i.e. for punctuation) we should leave it alone.
 encodeChar :: Char -> Char
 encodeChar c = undefined
 
-testEncodeChar =
-  runTestTT $
-    TestList
-      [ encodeChar 'a' ~?= 't',
-        encodeChar '.' ~?= '.'
-      ]
-
 {-
 We'll next need a way to encode a whole line of text.  Of course, remembering
 that `String`s are just lists of `Char`s, there is a perfect higher-order
@@ -109,8 +100,6 @@ function in `HigherOrder` that we can use:
 -- "the quick"
 encodeLine :: String -> String
 encodeLine = undefined
-
-testEncodeLine = runTestTT $ TestList [encodeLine "abc defgh" ~?= "the quick"]
 
 {-
 Finally, we need a function to encode a whole file.  Remember, we want to
@@ -139,9 +128,8 @@ So...
 encodeContent :: String -> String
 encodeContent = undefined
 
-testEncodeContent =
-  runTestTT $
-    encodeContent "abc\n defgh\n" ~?= " quick\nthe\n"
+-- >>> encodeContent "abc\n defgh\n"
+-- " quick\nthe\n"
 
 {-
 Don't forget that the . operator is function composition.  That is:

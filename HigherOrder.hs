@@ -1,14 +1,13 @@
 {-
 ---
 fulltitle: Higher-Order Programming Patterns
-date: September 11, 2023
+date: September 11, 2024
 ---
 -}
 
 module HigherOrder where
 
 import Data.Char
-import Test.HUnit
 import Prelude hiding (filter, foldr, map, pred, product, sum)
 
 {-
@@ -56,12 +55,10 @@ functions as input and return functions as output!  Consider:
 doTwice :: (a -> a) -> a -> a
 doTwice f x = f (f x)
 
-dtTests :: Test
-dtTests =
-  TestList
-    [ doTwice plus1 4 ~?= 6,
-      doTwice minus1 5 ~?= 3
-    ]
+-- >>> doTwice plus1 4
+-- 6
+-- >>> doTwice minus1 5
+-- 3
 
 {-
 Here, `doTwice` takes two inputs: a function `f` and value `x`, and
@@ -101,7 +98,7 @@ Haskell and almost every other language that you have seen.
 
 What is great about Haskell is that it is designed so that you don't have to
 worry about the evaluation order.  The substitution model of evaluation is
-*always* correct, and you can replace equals-for-equals *anywhere* in a
+\*always* correct, and you can replace equals-for-equals *anywhere* in a
 Haskell program to figure out its value. What this means is that you can
 could *also* understand the evaluation of `doTwice` using a more
 standard order of evaluation
@@ -232,8 +229,8 @@ thereby getting as output a function that is *waiting* for the second
 input (at which point it will produce the final result).
 -}
 
-pfivetest :: Test
-pfivetest = plusfive 1000 ~?= 1005
+-- >>> plusfive 1000
+-- 1005
 
 {-
 So how does this execute?  Again *substitute equals for equals*
@@ -316,12 +313,11 @@ use it in the same place where we would write a function.
 
 -}
 
-anonTests :: Test
-anonTests =
-  TestList
-    [ (\x -> x + 1) 100 ~?= (101 :: Int),
-      doTwice (\x -> x + 1) 100 ~?= (102 :: Int)
-    ]
+-- >>> (\x -> x + 1) 100
+-- 101
+
+-- >>> doTwice (\x -> x + 1) 100
+-- 102
 
 {-
 We call this expression form a "lambda expression", inspired by the [lambda
@@ -355,7 +351,7 @@ Infix Operations and Sections
 -----------------------------
 
 In order to improve readability, Haskell allows you to use certain functions as
-*infix* operators: an infix operator is a function whose name is made of
+\*infix* operators: an infix operator is a function whose name is made of
 symbols. Wrapping it in parentheses makes it a regular identifier.
 My personal favorite infix operator is the application function,
 defined like this:
@@ -382,7 +378,7 @@ That is, Haskell interprets everything after the `$` as one argument to
 because Haskell would think this was the application of `minus20` to the
 three separate arguments `plus`, `30` and `32`.
 
-It is often not a big deal whether one uses the `($)` operator or parentheses
+It is often not a big deal whether one uses the application operator or parentheses
 and it mostly comes down to a matter of taste. The operator can come in handy
 in certain situations, but it is always possible to write code without using
 it.
@@ -415,11 +411,12 @@ anotherFour = doTwice (+ 2) 0
 {-
 Similarly, the section `(1:)` takes a list of numbers and returns a
 new list with `1` followed by the input list.   So
+-}
 
-    doTwice (1:) [2..5]
+-- >>> doTwice (1:) [2..5]
+-- [1,1,2,3,4,5]
 
-evaluates to `[1,1,2,3,4,5]`.
-
+{-
 For practice, define the singleton operation as a section, so that the
 following test passes.
 -}
@@ -427,8 +424,8 @@ following test passes.
 singleton :: a -> [a]
 singleton = undefined
 
-singletonTest :: Test
-singletonTest = singleton True ~?= [True]
+-- >>> singleton True
+-- [True]
 
 {-
 One exception to sections is subtraction. `(-1)` is the integer "minus one",
@@ -488,10 +485,10 @@ ex1 x y = doTwice doTwice x y
 
 {-
 
+Hint: what does this evaluate to?
 -}
 
-ex1Test :: Test
-ex1Test = undefined
+-- >>> ex1 (+1) 1
 
 {-
 Polymorphic Data Structures
@@ -514,14 +511,20 @@ The function's type states that we can invoke `len` on any kind of list.
 The type variable `a` is a placeholder that is replaced with the actual type
 of the list elements at different application sites.  Thus, in the following
 applications of `len`, `a` is replaced with `Double`, `Char` and `[Int]`
-respectively.
+respectively.  We can ask Haskell to typecheck these expressions using the
+`:t` command.
+-}
 
-     len [1.1, 2.2, 3.3, 4.4] :: Int
+-- >>> :t len [1.1, 2.2, 3.3, 4.4]
+-- len [1.1, 2.2, 3.3, 4.4] :: Int
 
-     len "mmm donuts!"  :: Int
+-- >>> :t len "mmm donuts!"
+-- len "mmm donuts!" :: Int
 
-     len [[], [1], [1,2], [1,2,3]] :: Int
+-- >>> :t len [[], [1], [1,2], [1,2,3]]
+-- len [[], [1], [1,2], [1,2,3]] :: Int
 
+{-
 Most of the standard list manipulating functions, for example those in the
 module [`Data.List`][1], have generic types.  With a little practice, you'll
 find that the type signature contains a surprising amount of information about
@@ -601,6 +604,9 @@ toUpperString :: String -> String
 toUpperString [] = []
 toUpperString (x : xs) = toUpper x : toUpperString xs
 
+-- >>> toUpperString "abc"
+-- "ABC"
+
 {-
 This pattern of recursion appears all over the place.  For example,
 suppose we represent a location on the plane using a pair of `Double`s (for
@@ -628,6 +634,9 @@ shiftPoly :: XY -> Polygon -> Polygon
 shiftPoly _ [] = []
 shiftPoly d (xy : xys) = shiftXY d xy : shiftPoly d xys
 
+-- >>> shiftPoly (0.5,0.5) [(1,1),(2,2),(3,3)]
+-- [(1.5,1.5),(2.5,2.5),(3.5,3.5)]
+
 {-
 Now, some people (using some languages) might be quite happy with the above
 code. But what separates a good programmer from a great one is the ability
@@ -648,7 +657,7 @@ map f (x : xs) = f x : map f xs
 The type of `map` tells us exactly what it does: it takes an `a -> b`
 transformer and list of `a` values, and transforms each `a` value to return
 a list of `b` values.  We can now safely reuse the pattern, by
-*instantiating* the transformer with different specific operations.
+\*instantiating* the transformer with different specific operations.
 -}
 
 toUpperString' :: String -> String
@@ -661,13 +670,11 @@ shiftPoly' d = undefined
 Much better.  But let's make sure our refactoring didn't break anything!
 -}
 
-testMap :: Test
-testMap =
-  TestList
-    [ toUpperString' "abc" ~?= toUpperString "abc",
-      shiftPoly' (0.5, 0.5) [(1, 1), (2, 2), (3, 3)]
-        ~?= shiftPoly (0.5, 0.5) [(1, 1), (2, 2), (3, 3)]
-    ]
+-- >>> toUpperString' "abc"
+-- "ABC"
+
+-- >>> shiftPoly' (0.5,0.5) [(1,1),(2,2),(3,3)]
+-- [(1.5,1.5),(2.5,2.5),(3.5,3.5)]
 
 {-
 By the way, what happened to the list parameters of `toUpperString`
@@ -717,6 +724,9 @@ sum :: [Int] -> Int
 sum [] = 0
 sum (x : xs) = x + sum xs
 
+-- >>> sum [1,2,3]
+-- 6
+
 {-
 Next, a function that *multiplies* the elements of a list.
 -}
@@ -724,6 +734,9 @@ Next, a function that *multiplies* the elements of a list.
 product :: [Int] -> Int
 product [] = 1
 product (x : xs) = x * product xs
+
+-- >>> product [1,2,3]
+-- 6
 
 {-
 Can you see the pattern?  Again, the only bits that are different are
@@ -745,12 +758,11 @@ sum', product' :: [Int] -> Int
 sum' = foldr (+) 0
 product' = foldr (*) 1
 
-testFoldr :: Test
-testFoldr =
-  TestList
-    [ sum' [1, 2, 3] ~?= sum [1, 2, 3],
-      product' [1, 2, 3] ~?= product [1, 2, 3]
-    ]
+-- >>> sum' [1,2,3]
+-- 6
+
+-- >>> product' [1,2,3]
+-- 6
 
 {-
 To develop some intuition about `foldr` let's unfold an example a few
@@ -796,7 +808,7 @@ Or, how would you use foldr to eliminate the recursion from this?
 
 factorial :: Int -> Int
 factorial 0 = 1
-factorial n = n * factorial (n -1)
+factorial n = n * factorial (n - 1)
 
 factorial' :: Int -> Int
 factorial' n = undefined
@@ -814,20 +826,17 @@ of the first list for which the input function returns `True`.
 So:
 -}
 
-testFilter :: Test
-testFilter =
-  TestList
-    [ filter (> 10) [1 .. 20] ~?= ([11 .. 20] :: [Int]),
-      filter (\l -> sum l <= 42) [[10, 20], [50, 50], [1 .. 5]] ~?= [[10, 20], [1 .. 5]]
-    ]
+-- >>> filter (>10) [1..20]
+-- [11,12,13,14,15,16,17,18,19,20]
+
+-- >>> filter (\l -> sum l <= 42) [ [10,20], [50,50], [1..5] ]
+-- [[10,20],[1,2,3,4,5]]
+
 {-
 Can we implement filter using foldr?  Sure!
 -}
 
 filter pred = undefined
-
-runTests :: IO Counts
-runTests = runTestTT $ TestList [testMap, testFoldr, testFilter]
 
 {-
 Which is more readable? HOFs or Recursion
@@ -848,7 +857,7 @@ and worse, there is potential for making silly off-by-one type errors
 if you re-jigger the basic strategy every time.
 
 As an added bonus, it can be quite useful and profitable to
-*parallelize* and *distribute* the computation patterns (like `map`
+\*parallelize* and *distribute* the computation patterns (like `map`
 and `foldr`) in just one place, thereby allowing arbitrary hundreds or
 thousands of instances to benefit in a single shot! Haskell doesn't
 do this out of the box, but these ideas readily translate to languages
