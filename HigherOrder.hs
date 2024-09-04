@@ -259,7 +259,11 @@ arguments before substituting them into the body of a defined function.
 
     doTwicePlus20 0 == doTwice (plus 20) 0        {- unfold doTwice -}
                     == (plus 20) ((plus 20) 0)
-                    ... undefined (fill this part in) ...
+-}
+
+--            ... undefined (fill this part in) ...
+
+{-
                     == 20 + 20 + 0
                     == 40
 
@@ -481,10 +485,9 @@ Ok, to make sure you're following, can you figure out what this does?
 -}
 
 ex1 :: (a -> a) -> a -> a
-ex1 x y = doTwice doTwice x y
+ex1 f y = doTwice doTwice f y
 
 {-
-
 Hint: what does this evaluate to?
 -}
 

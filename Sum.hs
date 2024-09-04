@@ -4,7 +4,7 @@ fulltitle: "Optional exercise: foldr vs. foldl"
 ---
 
 This module contains some quick examples demonstrating the difference between
-foldr and foldl. It is advanced material for CIS 5520, designed for those who
+`foldr` and `foldl`. It is advanced material for CIS 5520, designed for those who
 have seen `fold` and tail recursion before, such as in CIS 1200.
 -}
 
@@ -62,6 +62,7 @@ the variants of `sum` above. Then try to write the missing fourth
 variant`.
 -}
 
+-- | Generalization of recursion pattern in `sum1`
 foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr f b = go
   where
@@ -101,8 +102,9 @@ sum4' = foldlFlip (+) 0
 
 {-
 Now see what happens when you use these general operations
-with the `(:)` operator. Unlike `(+)`, `(:)` is not
-\*commutative* so not all of the results will be the same.
+with the `(:)` operator. Unlike `(+)`, `(:)` is
+associative but not *commutative* so not all of the
+results will be the same.
 -}
 
 -- >>> foldr (:) [] [1,2,3]
@@ -114,7 +116,8 @@ with the `(:)` operator. Unlike `(+)`, `(:)` is not
 -- >>> foldlFlip (:) [] [1,2,3]
 
 {-
-On the other hand, the `(-)` operator is not associative,
+On the other hand, the `(-)` operator is both
+not associative and not commutative,
 so again the results will be different.
 -}
 
