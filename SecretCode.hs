@@ -1,6 +1,7 @@
 {-
 ---
 fulltitle: "Optional exercise: SecretCode"
+date: September 9, 2024
 ---
 
 This module is for those who are completely new to functional programming.
@@ -11,14 +12,9 @@ please ask on the Ed platform or in office hours.
 
 module SecretCode where
 
+-- https://www.seas.upenn.edu/~cis5520/current/lectures/stub/02-higherorder/SecretCode.html
+
 {-
-Remember that you can execute the definitions in this module by loading it
-into ghci.  In the terminal, you can use the command
-
-      stack ghci SecretCode.hs
-
-to automatically start ghci and load the module.
-
 OK, we're going to write a Haskell program to encode and decode text files
 using a secret code.
 
@@ -32,6 +28,8 @@ We'll call it the Brown Fox code.  Here's how it works:
       But leave any non-letter characters alone.
 
     - Then reverse the order of the lines in the file.
+
+We start by importing some libraries that we might want to use in our solution.
 -}
 
 import Data.Char
@@ -102,27 +100,40 @@ encodeLine :: String -> String
 encodeLine = undefined
 
 {-
+And, if we have a list of lines, we can use the same higher-order function
+to encode all of them.
+-}
+
+-- >>> encodeLines ["abc", "defgh"]
+-- ["the","quick"]
+encodeLines :: [String] -> [String]
+encodeLines = undefined
+
+{-
 Finally, we need a function to encode a whole file.  Remember, we want to
 reverse the order of the lines (so that the last line is first, and so on),
 then swap the letters in each. The
-[`reverse`](https://hackage.haskell.org/package/base-4.12.0.0/docs/Prelude.html#v:reverse)
+[`reverse`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:reverse)
 function in the standard library will come in handy.
 
 However, we also need a way to break a file into
 lines - we could do this manually by folding over the `String` and checking
 for newlines, but this seems like a commonly used function, let's check
-[Hoogle](https://hoogle.haskell.org/?hoogle=String%20-%3E%20%5BString%5D&scope=set%3Ahaskell-platform)
-instead.  Indeed, we find a function of type
+[Hoogle](https://hoogle.haskell.org/?hoogle=String+-%3E+%5BString%5D&scope=package%3Abase)
+instead.  Indeed, we find several functions of type
 
-   String -> [String]
+       String -> [String]
 
-in the standard library to do just this.  Furthermore, its
-[counterpart](https://hoogle.haskell.org/?hoogle=String%20-%3E%20%5BString%5D&scope=set%3Ahaskell-platform)
+in the standard library, and the first one, called `lines` looks like it does what we want.  Furthermore, its
+counterpart [unlines](https://hoogle.haskell.org/?hoogle=String%20-%3E%20%5BString%5D&scope=package%3Abase)
 of type
 
-   [String] -> String
+       [String] -> String
 
-So...
+will put the lines back together into one big string.
+
+So... lets use these functions! This definition should not be recursive. Instead, it should put together
+the functions that we already have to encode the entire file.
 -}
 
 encodeContent :: String -> String
@@ -174,3 +185,15 @@ main = do
   fn <- getLine
   encodeFile fn
   putStrLn "All done!"
+
+{-
+Because this main function works in the IO monad, we need to use ghci to see its result.
+In the terminal, you can use the command
+
+      stack ghci SecretCode.hs
+
+to automatically start ghci and load the module. Then you can run the main function at the
+ghci prompt by just typing its name.
+
+      ghci> main
+-}

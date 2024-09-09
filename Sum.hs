@@ -1,6 +1,7 @@
 {-
 ---
 fulltitle: "Optional exercise: foldr vs. foldl"
+date: September 11, 2024
 ---
 
 This module contains some quick examples demonstrating the difference between
@@ -9,6 +10,8 @@ have seen `fold` and tail recursion before, such as in CIS 1200.
 -}
 
 module Sum where
+
+-- https://www.seas.upenn.edu/~cis5520/current/lectures/stub/02-higherorder/Sum.html
 
 import Prelude hiding (foldl, foldr)
 
