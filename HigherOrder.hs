@@ -1,7 +1,7 @@
 {-
 ---
 fulltitle: Higher-Order Programming Patterns
-date: September 11, 2024
+date: September 9, 2024
 ---
 -}
 

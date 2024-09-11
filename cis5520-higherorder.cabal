@@ -16,7 +16,7 @@ library
                        SecretCode
                        Sum
                        Foldr
-  build-depends:       base ==4.18.2.1
+  build-depends:       base >=4.18
                        , HUnit >= 1.6
                        , filepath >= 1.4
   default-language:    GHC2021

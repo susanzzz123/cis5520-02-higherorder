@@ -1,6 +1,7 @@
 {-
 ---
 fulltitle: "In class exercise: foldr"
+date: September 11, 2024
 ---
 
 In [HigherOrder](HigherOrder.html) we saw a few functions that you could write using the
@@ -16,6 +17,8 @@ of `foldr` shown in the module [Sum](Sum.html).
 -}
 
 module Foldr where
+
+-- See: https://www.seas.upenn.edu/~cis5520/current/lectures/stub/02-higherorder/Foldr.html
 
 import Prelude hiding (all, filter, foldl, foldl1, last, length, map, reverse)
 
